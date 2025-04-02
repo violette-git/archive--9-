@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bunny Snake Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Game Title and Logo -->
+        <div class="game-title">
+            <h1>Bunny Snake Game</h1>
+            <div class="game-logo">
+                <img src="bunny-head.png" alt="Bunny Head" class="logo-img">
+            </div>
+        </div>
+        
+        <!-- Game Information Display -->
+        <div class="game-info">
+            <div class="score-container">
+                <span>Score: </span>
+                <span id="score">0</span>
+            </div>
+            <div class="high-score-container">
+                <span>High Score: </span>
+                <span id="highScore">0</span>
+            </div>
+            <div class="level-container">
+                <span>Level: </span>
+                <span id="level">1</span>
+            </div>
+        </div>
+        
+        <!-- Game Canvas -->
+        <canvas id="gameCanvas" width="600" height="400"></canvas>
+        
+        <!-- Game Instructions -->
+        <div id="instructionsPanel" class="instructions-panel">
+            <h2>How to Play Bunny Snake</h2>
+            
+            <div class="instructions-content">
+                <div class="instructions-section">
+                    <h3>Controls:</h3>
+                    <p><span class="key">↑</span> <span class="key">↓</span> <span class="key">←</span> <span class="key">→</span> or <span class="key">W</span> <span class="key">A</span> <span class="key">S</span> <span class="key">D</span> to move your bunny</p>
+                    <p><span class="key">P</span> to pause/resume the game</p>
+                </div>
+                
+                <div class="instructions-section">
+                    <h3>Game Objectives:</h3>
+                    <ul>
+                        <li>Guide your bunny to collect carrots <img src="carrot.png" alt="Carrot" class="small-icon"></li>
+                        <li>Each carrot adds 10 points to your score</li>
+                        <li>Advance to the next level every 100 points</li>
+                        <li>Higher levels increase game speed and enemy frequency</li>
+                    </ul>
+                </div>
+                
+                <div class="instructions-section">
+                    <h3>Enemies:</h3>
+                    <p><img src="fox.png" alt="Fox" class="small-icon"> <strong>Fox</strong> - Moves at moderate speed</p>
+                    <p><img src="wolf.png" alt="Wolf" class="small-icon"> <strong>Wolf</strong> - Faster and more dangerous</p>
+                    <p>Enemies will cut your bunny's tail if they cross it!</p>
+                    <p>You lose 5 points for each segment cut off.</p>
+                    <p>If an enemy hits your bunny's head, it's game over!</p>
+                </div>
+            </div>
+            
+            <button id="closeInstructions" class="game-button">Start Playing!</button>
+        </div>
+        
+        <!-- Controls Info (Visible during gameplay) -->
+        <div class="controls-info">
+            <h3>Quick Tips:</h3>
+            <p>Use arrow keys or WASD to move your bunny snake.</p>
+            <p>Collect carrots to grow longer and earn points!</p>
+            <p>Avoid hitting the walls or yourself.</p>
+            <p>Watch out for foxes and wolves! They will cut your bunny's tail if they cross it.</p>
+            <p>Press P to pause/resume the game.</p>
+        </div>
+        
+        <!-- Game Buttons -->
+        <div class="button-container">
+            <button id="startButton" class="game-button">Start Game</button>
+            <button id="restartButton" class="game-button" style="display: none;">Restart Game</button>
+            <button id="pauseButton" class="game-button" style="display: none;">Pause Game</button>
+            <button id="instructionsButton" class="game-button">Instructions</button>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+    
+    <script>
+        // Instructions panel toggle functionality
+        document.getElementById('instructionsButton').addEventListener('click', function() {
+            document.getElementById('instructionsPanel').style.display = 'block';
+        });
+        
+        document.getElementById('closeInstructions').addEventListener('click', function() {
+            document.getElementById('instructionsPanel').style.display = 'none';
+        });
+        
+        // Show instructions panel on first load
+        window.addEventListener('load', function() {
+            document.getElementById('instructionsPanel').style.display = 'block';
+        });
+        
+        // Hide instructions when game starts
+        document.getElementById('startButton').addEventListener('click', function() {
+            document.getElementById('instructionsPanel').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

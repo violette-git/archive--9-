@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bunny Snake Game - Automated Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .failure {
+            color: red;
+            font-weight: bold;
+        }
+        .test-log {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: monospace;
+            height: 200px;
+            overflow-y: auto;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Bunny Snake Game - Start Button Test</h1>
+        
+        <div class="test-results" id="testResults">
+            <h2>Test Results</h2>
+            <p>Running test...</p>
+        </div>
+        
+        <div class="test-log" id="testLog"></div>
+        
+        <h2>Game Preview</h2>
+        <iframe id="gameFrame" src="index.html"></iframe>
+    </div>
+
+    <script>
+        // Custom console logger to capture output
+        const testLog = document.getElementById('testLog');
+        const testResults = document.getElementById('testResults');
+        
+        function log(message, type = 'info') {
+            const line = document.createElement('div');
+            line.textContent = message;
+            if (type === 'error') line.style.color = 'red';
+            if (type === 'success') line.style.color = 'green';
+            testLog.appendChild(line);
+            testLog.scrollTop = testLog.scrollHeight;
+        }
+        
+        // Wait for iframe to load
+        document.getElementById('gameFrame').onload = function() {
+            log('Game loaded in iframe. Starting test in 2 seconds...');
+            
+            setTimeout(() => {
+                runTest();
+            }, 2000);
+        };
+        
+        function runTest() {
+            const iframe = document.getElementById('gameFrame');
+            const iframeWindow = iframe.contentWindow;
+            const iframeDoc = iframe.contentDocument || iframeWindow.document;
+            
+            log('Starting test of the start button...');
+            
+            // Check if the start button exists
+            const startButton = iframeDoc.getElementById('startButton');
+            if (!startButton) {
+                log('Start button not found in the document!', 'error');
+                testResults.innerHTML = '<h2>Test Results</h2><p class="failure">FAILURE: Start button not found!</p>';
+                return;
+            }
+            
+            log('Start button found. Checking initial state...');
+            
+            // Store the initial state
+            const initialInstructionsDisplay = iframeDoc.getElementById('instructionsPanel').style.display;
+            log(`Initial instructions panel display: ${initialInstructionsDisplay}`);
+            
+            log('Clicking start button...');
+            // Click the start button
+            startButton.click();
+            
+            // Check the state after clicking
+            log('Checking state after clicking start button...');
+            
+            // Wait a moment for any animations or transitions
+            setTimeout(() => {
+                // Check if the instructions are hidden
+                const instructionsHidden = iframeDoc.getElementById('instructionsPanel').style.display === 'none';
+                
+                // Check if the game is running by checking if the start button is hidden and pause button is shown
+                const startButtonHidden = iframeDoc.getElementById('startButton').style.display === 'none';
+                const pauseButtonShown = iframeDoc.getElementById('pauseButton').style.display === 'inline-block';
+                
+                log('Test results:');
+                log(`- Instructions hidden: ${instructionsHidden}`);
+                log(`- Start button hidden: ${startButtonHidden}`);
+                log(`- Pause button shown: ${pauseButtonShown}`);
+                
+                if (instructionsHidden && startButtonHidden && pauseButtonShown) {
+                    log('SUCCESS: Start button works correctly!', 'success');
+                    testResults.innerHTML = `
+                        <h2>Test Results</h2>
+                        <p class="success">SUCCESS: Start button works correctly!</p>
+                        <ul>
+                            <li>Instructions hidden: ${instructionsHidden}</li>
+                            <li>Start button hidden: ${startButtonHidden}</li>
+                            <li>Pause button shown: ${pauseButtonShown}</li>
+                        </ul>
+                    `;
+                } else {
+                    log('FAILURE: Start button does not properly initialize the game.', 'error');
+                    log(`Current instructions display: ${iframeDoc.getElementById('instructionsPanel').style.display}`);
+                    log(`Start button display: ${iframeDoc.getElementById('startButton').style.display}`);
+                    log(`Pause button display: ${iframeDoc.getElementById('pauseButton').style.display}`);
+                    
+                    testResults.innerHTML = `
+                        <h2>Test Results</h2>
+                        <p class="failure">FAILURE: Start button does not properly initialize the game.</p>
+                        <ul>
+                            <li>Instructions hidden: ${instructionsHidden}</li>
+                            <li>Start button hidden: ${startButtonHidden}</li>
+                            <li>Pause button shown: ${pauseButtonShown}</li>
+                        </ul>
+                    `;
+                }
+            }, 500);
+        }
+    </script>
+</body>
+</html>
